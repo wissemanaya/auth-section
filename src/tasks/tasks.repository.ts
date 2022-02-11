@@ -3,12 +3,14 @@ import { Task } from './task.entity' ;
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task.status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { User } from 'src/auth/user.entity';
 
 @EntityRepository(Task)                                                            // to tell typeorm that's going to be repository of task
 export class TasksRepository extends Repository<Task>{      
-    async getTask  (filterDto : GetTasksFilterDto): Promise<Task[]>{
+    async getTask  (filterDto : GetTasksFilterDto , user:User): Promise<Task[]>{
         const{status, search}=filterDto ;
-        const query = this.createQueryBuilder('task') ;                                // querry allows us to build SQL queries execute and get transformred entities like SELECT from table 
+        const query = this.createQueryBuilder('task') ;   // querry allows us to build SQL queries execute and get transformred entities like SELECT from table 
+        query.where({user}) ;               // to get all tasks just belongs to that user .. query is like the sql statement (where)
         if(status){
             query.andWhere('task.status =: status', {status});
         }
@@ -26,12 +28,13 @@ export class TasksRepository extends Repository<Task>{
 
 
 
-    async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    async createTask(createTaskDto: CreateTaskDto , user:User): Promise<Task> {
         const {title,description} = createTaskDto;
         const task = this.create({
           title,
           description,
           status: TaskStatus.OPEN ,
+          user                     // this user own this task 
         });
         await this.save(task) ;
         return task ;

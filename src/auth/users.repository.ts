@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { user } from './user.entity';
+import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import {
   ConflictException,
@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-@EntityRepository(user)          //sprcify entity user
-export class UsersRepository extends Repository<user> {
+@EntityRepository(User)          //sprcify entity user
+export class UsersRepository extends Repository<User> {
   //define a new user
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
@@ -20,7 +20,7 @@ export class UsersRepository extends Repository<user> {
       await this.save(user);            // store hashed pasword not really real password 
     } catch (error) {
       if (error.code == '23505') {
-        // if ther is a duplicate username
+        // if their is a duplicate username
         throw new ConflictException('username already exists');
       } else {
         throw new InternalServerErrorException();

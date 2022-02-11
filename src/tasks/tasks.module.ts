@@ -7,7 +7,7 @@ import { TasksService } from './tasks.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TasksRepository],AuthModule ,)],    //to make this repository available anywher in my taskmodeule
+  TypeOrmModule.forFeature([TasksRepository]), AuthModule],    //to make this repository available anywher in my taskmodeule
   controllers: [TasksController],
   providers: [TasksService],
 })

@@ -1,9 +1,9 @@
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { user } from './user.entity';
-    //to guard entire tasks controller 
+import { User } from './user.entity';
+
 export const GetUser = createParamDecorator(
-  (_data, ctx: ExecutionContext): user => {const req = ctx.switchToHttp().getRequest()
+  (_data, ctx: ExecutionContext): User => {const req = ctx.switchToHttp().getRequest()
     return req.user;
-  },
+  },           // this retuen param that entred 
 );
